@@ -188,7 +188,7 @@ def criar_card(titulo: string, conteudo: ft.Control, p: dict, cor_borda_key: str
         shadow=ft.BoxShadow(blur_radius=8, spread_radius=0, color=p["sombra"], offset=ft.Offset(0,2)),
     )        
 
-def criar_botao_primario(texto, icone, on_click, expend=False):
+def criar_botao_primario(texto, icone, on_click, expand=False):
     
     return ft.ElevatedButton(
         content=ft.Row(
@@ -241,6 +241,75 @@ def criar_dica(mensagem: str, p:dict)->ft.Container:
         border=ft.border.all(1, p["borda_dica"]),        
     )
 
-
+def criar_item_menu(label, icone_off, icone_on, ativo, on_click, p: dict)->ft.Container:
+    
+    return ft.Container(
+        content=ft.Row([
+            ft.Icon(
+                icone_on if ativo else icone_off,
+                size=18,
+                color=p["icone_menu_ativo"] if ativo else p["icone_menu_normal"],
+            ),
+            ft.Text(label, size=13, weight="bold" if ativo else "normal", color=p["icone_menu_ativo"] if ativo else p["icone_menu_normal"])
+        ],
+            spacing=10, tight=True
+        ),
+        padding=ft.Padding(10,9,10,9),
+        border_radius=8,
+        bgcolor=p["bg_menu_ativo"] if ativo else ft.Colors.TRANSPARENT,
+        border=ft.border.all(1, p["bg_menu_ativo"]) if ativo else None,
+        on_click=on_click,
+        ink=True,
+    )
+    
+def main(page: ft.Page):
+    page.title = "Smart Panel"
+    
+    page.padding = 0
+    page.spacing = 0
+    
+    page.theme_mode = ft.ThemeMode.LIGHT
+    page.theme = ft.Theme(color_scheme_seed=ft.Colors.INDIGO)
+    
+    estado = {
+        "dark_mode": False,
+        "notificacoes": 3,
+        "usuario_logado": "",
+        "rota": "/",
+        "mobile": False
+    }
+    
+    campo_nome = ft.TextField(
+        label = "Seu nome",
+        hint_text="Ex: João Silva",
+        prefix_icon=ft.Icons.PERSON_OUTLINED,
+        expand=True,
+        border_radius=8
+    )
+    
+    campo_email = ft.TextField(
+        label = "E-mail",
+        hint_text="Ex: JoãoSilva@gmail.com",
+        prefix_icon=ft.Icons.EMAIL_OUTLINED,
+        expand=True,
+        border_radius=8,
+        keyboard_type=ft.KeyboardType.EMAIL,
+    )
+    
+    def mostrar_snack(msg: str, cor = ft.Colors.GREEN_700):
+        sb=ft.SnackBar(
+            content=ft.Text(msg, color=ft.Colors.WHITE),
+            bgcolor=cor,
+            duration=2500,
+        )
+        
+        page.overlay.append(sb)
+        
+        sb.open = True
+        
+        page.update()
+    
+    texto_result = ft.Text("")
+    
 
 ft.run(main)
